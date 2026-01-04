@@ -12,6 +12,9 @@ pipeline {
   environment {
     MONGODB_URI = credentials("IP1-MongoDB")
     RENDER_BASE_URL = "https://gallery-45sh.onrender.com/"
+    // Slack workspace: https://sallydev12.slack.com
+    SLACK_CHANNEL = "C0A68RK36JY" // channel ID from provided link
+    SLACK_TEAM_DOMAIN = "sallydev12"
   }
 
   stages {
@@ -52,22 +55,24 @@ pipeline {
       post {
         success {
           slackSend(
-            channel: "#YourFirstName_IP1",
+            channel: SLACK_CHANNEL,
             color: "good",
             message: "Build and deployment successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}. Site: ${RENDER_BASE_URL}",
-            teamDomain: "moringadevops12",
+            teamDomain: SLACK_TEAM_DOMAIN,
             tokenCredentialId: "SlackJenkins",
-            botUser: true
+            botUser: true,
+            failOnError: true
           )
         }
         failure {
           slackSend(
-            channel: "#YourFirstName_IP1",
+            channel: SLACK_CHANNEL,
             color: "danger",
             message: "Build failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}. Check Jenkins logs.",
-            teamDomain: "moringadevops12",
+            teamDomain: SLACK_TEAM_DOMAIN,
             tokenCredentialId: "SlackJenkins",
-            botUser: true
+            botUser: true,
+            failOnError: true
           )
         }
       }
