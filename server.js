@@ -11,14 +11,13 @@ let image = require('./routes/image');
 // Initializing the app
 const app = express();
 
-// connecting the database
-// const MONGODB_URI = process.env.MONGODB_URI;
-const MONGODB_URI_CENSORED = config.mongoURI[app.settings.env];
-mongoose.connect(MONGODB_URI_CENSORED, { useNewUrlParser: true, useUnifiedTopology: true  },(err)=>{
+// connecting the database (prefer env override for CI/CD)
+const MONGODB_URI = process.env.MONGODB_URI || config.mongoURI[app.settings.env];
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true  },(err)=>{
     if (err) {
         console.log(err)
     }else{
-        console.log(`Connected to Database: ${MONGODB_URI_CENSORED}`)
+        console.log(`Connected to Database: ${MONGODB_URI}`)
     }
 });
 
@@ -43,11 +42,12 @@ app.use('/image', image);
 
 
 
- 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT,() =>{
-    console.log(`Server is listening at http://localhost:${PORT}`)
-});
-
+// Only start server when run directly to avoid port conflicts during tests
+if (require.main === module) {
+    app.listen(PORT,() =>{
+        console.log(`Server is listening at http://localhost:${PORT}`)
+    });
+}
 
 module.exports = app;
