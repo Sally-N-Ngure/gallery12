@@ -11,7 +11,7 @@ pipeline {
 
   environment {
     MONGODB_URI = credentials("IP1-MongoDB")
-    RENDER_BASE_URL = "https://gallery-45sh.onrender.com/"
+    RENDER_BASE_URL = "https://dashboard.render.com/web/srv-d4qu20khg0os738h9fm0"
     // Slack workspace: https://sallydev12.slack.com
     SLACK_CHANNEL = "C0A68RK36JY" // channel ID from provided link
     SLACK_TEAM_DOMAIN = "sallydev12"
