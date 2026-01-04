@@ -43,11 +43,10 @@ app.use('/image', image);
 
 
 const PORT = process.env.PORT || 5000;
-// Only start server when run directly to avoid port conflicts during tests
 if (require.main === module) {
-    app.listen(PORT,() =>{
-        console.log(`Server is listening at http://localhost:${PORT}`)
-    });
+  app.listen(PORT,() =>{
+    console.log(`Server is listening at http://localhost:${PORT}`)
+  });
 }
 
 module.exports = app;
