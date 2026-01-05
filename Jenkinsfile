@@ -5,27 +5,19 @@ pipeline {
     nodejs "NodeJS18"
   }
 
-  triggers {
-    githubPush()
-  }
-
   environment {
     MONGODB_URI = credentials("IP1-MongoDB")
     RENDER_BASE_URL = "https://gallery-45sh.onrender.com/"
-    // Slack workspace: https://sallydev12.slack.com
-    // Channel required by Milestone 4: YourFirstName_IP1
-    SLACK_CHANNEL = "#Sally_IP1"
-    SLACK_TEAM_DOMAIN = "sallydev12"
   }
 
   stages {
-    stage("Checkout") {
+    stage("Clone Repository") {
       steps {
-        checkout scm
+        git branch: "master", url: "https://github.com/Sally-N-Ngure/gallery12.git"
       }
     }
 
-    stage("Install Dependencies") {
+    stage("Install Dependecies") {
       steps {
         sh "npm ci"
       }
@@ -35,60 +27,59 @@ pipeline {
       steps {
         sh "npm test"
       }
-      post {
-        failure {
-          emailext(
-            subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-            body: "The build for ${env.JOB_NAME} #${env.BUILD_NUMBER} has failed. Please check the Jenkins console output for details.",
-            to: "douglas.wangome@student.moringaschool.com"
-          )
-        }
-      }
+
+    //   post {
+    //     failure {
+    //       emailext(
+    //         subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+	// 					body: "The build for ${env.JOB_NAME} #${env.BUILD_NUMBER} has failed. Please check the Jenkins console output for more details.",
+	// 					to: "douglas.wangome@student.moringaschool.com"
+    //       )
+    //     }
+    //   }
     }
 
-    stage("Deploy to Render") {
-      steps {
-        echo "Triggering deployment to Render..."
-        withCredentials([string(credentialsId: 'RenderDeployHook', variable: 'RENDER_HOOK')]) {
-          sh "curl -s -X POST ${RENDER_HOOK}"
-        }
-      }
-      post {
-        success {
-          slackSend(
-            channel: SLACK_CHANNEL,
-            color: "good",
-            message: "Build and deployment successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}. Site: ${RENDER_BASE_URL}",
-            teamDomain: SLACK_TEAM_DOMAIN,
-            tokenCredentialId: "SlackJenkins",
-            botUser: true,
-            failOnError: true
-          )
-        }
-        failure {
-          slackSend(
-            channel: SLACK_CHANNEL,
-            color: "danger",
-            message: "Build failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}. Check Jenkins logs.",
-            teamDomain: SLACK_TEAM_DOMAIN,
-            tokenCredentialId: "SlackJenkins",
-            botUser: true,
-            failOnError: true
-          )
-        }
-      }
-    }
-  }
+//     stage("Deploy to Render") {
+//       steps {
+//         echo "Deploying to Render..."
+// 				echo "Triggering deployment to Render with base URL: ${RENDER_BASE_URL}"
+// 				echo "Deployment complete."
+//       }
 
-  post {
-    always {
-      script {
-        if (currentBuild.result == 'SUCCESS') {
-          echo "Build completed successfully"
-        } else {
-          echo "Build failed, check the logs for details"
-        }
-      }
-    }
+//       post {
+//         success{
+//           slackSend(
+// 						channel: "#douglas_ip1",
+// 						color: "good",
+// 						message: "Build and deployment successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}. Check the build at ${RENDER_BASE_URL}",
+// 						teamDomain: "moringadevops10",
+// 						tokenCredentialId: "Jenkins-App-Slack",
+// 						botUser: true
+// 					)
+//         }
+//         failure{
+//           slackSend(
+// 						channel: "#douglas_ip1",
+// 						color: "danger",
+// 						message: "Build failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}. Please check the Jenkins console output for more details.",
+// 						teamDomain: "moringadevops10",
+// 						tokenCredentialId: "Jenkins-App-Slack",
+// 						botUser: true
+// 					)
+//         }
+//       }
+//     }
+//   }
+
+//   post {
+//     always {
+//       script {
+//         if (currentBuild.result == 'SUCCESS') {
+// 					echo "Build completed successfully"
+// 				} else {
+// 					echo "Build failed, check the logs for details"
+// 				}
+//       }
+//     }
   }
 }
