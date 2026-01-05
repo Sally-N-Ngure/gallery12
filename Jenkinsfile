@@ -29,14 +29,24 @@ pipeline {
       }
 
       post {
-        failure {
-          emailext(
-            subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-						body: "The build for ${env.JOB_NAME} #${env.BUILD_NUMBER} has failed. Please check the Jenkins console output for more details.",
-						to: "sally.ngure@student.moringaschool.com"
-          )
+        always {
+            emailext(
+                subject: "Build Status: ${currentBuild.currentResult} - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """
+                    <h2>Jenkins Build Notification</h2>
+                    <p><b>Job:</b> ${env.JOB_NAME}</p>
+                    <p><b>Build Number:</b> ${env.BUILD_NUMBER}</p>
+                    <p><b>Status:</b> ${currentBuild.currentResult}</p>
+                    <p><b>Duration:</b> ${currentBuild.durationString}</p>
+                    <p><b>Console Output:</b> <a href="${env.BUILD_URL}console">View Logs</a></p>
+                    <p><b>Build URL:</b> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                """,
+                to: 'sally.ngure@student.moringaschool.com',
+                attachLog: true,  // Attach build log
+                compressLog: true
+            )
         }
-      }
+    }
     }
 
 //     stage("Deploy to Render") {
