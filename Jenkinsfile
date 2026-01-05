@@ -60,7 +60,7 @@ pipeline {
 						channel: "#sally_ip1",
 						color: "good",
 						message: "Build and deployment successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}. Check the build at ${RENDER_BASE_URL}",
-						teamDomain: "sallyDev12",
+						teamDomain: "sallydev12",
 						tokenCredentialId: "JenkinsSlack",
 						botUser: true
 					)
@@ -70,7 +70,7 @@ pipeline {
 						channel: "#sally_ip1",
 						color: "danger",
 						message: "Build failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}. Please check the Jenkins console output for more details.",
-						teamDomain: "sallyDev12",
+						teamDomain: "sallydev12",
 						tokenCredentialId: "JenkinsSlack",
 						botUser: true
 					)
