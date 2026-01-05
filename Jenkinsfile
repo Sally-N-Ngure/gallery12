@@ -25,18 +25,18 @@ pipeline {
 
     stage("Run Tests") {
       steps {
-        sh "npm test"
+        sh "npm tests"
       }
 
-    //   post {
-    //     failure {
-    //       emailext(
-    //         subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-	// 					body: "The build for ${env.JOB_NAME} #${env.BUILD_NUMBER} has failed. Please check the Jenkins console output for more details.",
-	// 					to: "douglas.wangome@student.moringaschool.com"
-    //       )
-    //     }
-    //   }
+      post {
+        failure {
+          emailext(
+            subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+						body: "The build for ${env.JOB_NAME} #${env.BUILD_NUMBER} has failed. Please check the Jenkins console output for more details.",
+						to: "sally.ngure@student.moringaschool.com"
+          )
+        }
+      }
     }
 
 //     stage("Deploy to Render") {
