@@ -54,28 +54,28 @@ pipeline {
 		echo "Deployment complete."
       }
 
-//       post {
-//         success{
-//           slackSend(
-// 						channel: "#douglas_ip1",
-// 						color: "good",
-// 						message: "Build and deployment successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}. Check the build at ${RENDER_BASE_URL}",
-// 						teamDomain: "moringadevops10",
-// 						tokenCredentialId: "Jenkins-App-Slack",
-// 						botUser: true
-// 					)
-//         }
-//         failure{
-//           slackSend(
-// 						channel: "#douglas_ip1",
-// 						color: "danger",
-// 						message: "Build failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}. Please check the Jenkins console output for more details.",
-// 						teamDomain: "moringadevops10",
-// 						tokenCredentialId: "Jenkins-App-Slack",
-// 						botUser: true
-// 					)
-//         }
-//       }
+      post {
+        success{
+          slackSend(
+						channel: "#sally_ip1",
+						color: "good",
+						message: "Build and deployment successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}. Check the build at ${RENDER_BASE_URL}",
+						teamDomain: "sallyDev12",
+						tokenCredentialId: "JenkinsSlack",
+						botUser: true
+					)
+        }
+        failure{
+          slackSend(
+						channel: "#sally_ip1",
+						color: "danger",
+						message: "Build failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}. Please check the Jenkins console output for more details.",
+						teamDomain: "sallyDev12",
+						tokenCredentialId: "JenkinsSlack",
+						botUser: true
+					)
+        }
+      }
     }
   }
 
