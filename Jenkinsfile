@@ -43,8 +43,8 @@ pipeline {
                 """,
                 to: 'sally.ngure@student.moringaschool.com',
             )
+            }
         }
-    }
     }
 
     stage("Deploy to Render") {
@@ -76,7 +76,7 @@ pipeline {
 // 					)
 //         }
 //       }
-//     }
+    }
   }
 
   post {
