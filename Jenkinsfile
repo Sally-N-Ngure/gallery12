@@ -7,7 +7,7 @@ pipeline {
 
   environment {
     MONGODB_URI = credentials("IP1-MongoDB")
-    RENDER_BASE_URL = "https://gallery-45sh.onrender.com/"
+    RENDER_BASE_URL = "https://gallery12.onrender.com"
   }
 
   stages {
@@ -25,11 +25,11 @@ pipeline {
 
     stage("Run Tests") {
       steps {
-        sh "npm tests"
+        sh "npm test"
       }
 
       post {
-        always {
+        failure {
             emailext(
                 subject: "Build Status: ${currentBuild.currentResult} - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: """
@@ -42,19 +42,17 @@ pipeline {
                     <p><b>Build URL:</b> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                 """,
                 to: 'sally.ngure@student.moringaschool.com',
-                attachLog: true,  // Attach build log
-                compressLog: true
             )
         }
     }
     }
 
-//     stage("Deploy to Render") {
-//       steps {
-//         echo "Deploying to Render..."
-// 				echo "Triggering deployment to Render with base URL: ${RENDER_BASE_URL}"
-// 				echo "Deployment complete."
-//       }
+    stage("Deploy to Render") {
+      steps {
+        echo "Deploying to Render..."
+		echo "Triggering deployment to Render with base URL: ${RENDER_BASE_URL}"
+		echo "Deployment complete."
+      }
 
 //       post {
 //         success{
@@ -79,17 +77,17 @@ pipeline {
 //         }
 //       }
 //     }
-//   }
+  }
 
-//   post {
-//     always {
-//       script {
-//         if (currentBuild.result == 'SUCCESS') {
-// 					echo "Build completed successfully"
-// 				} else {
-// 					echo "Build failed, check the logs for details"
-// 				}
-//       }
-//     }
+  post {
+    always {
+      script {
+        if (currentBuild.result == 'SUCCESS') {
+					echo "Build completed successfully"
+				} else {
+					echo "Build failed, check the logs for details"
+				}
+      }
+    }
   }
 }
